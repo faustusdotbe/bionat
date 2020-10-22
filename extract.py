@@ -10,6 +10,7 @@ coll = sys.argv[1]
 
 def download(coll,nrange,base):
 	print("Downloading",coll)
+	NotFound = []
 	for n in tqdm(nrange):
 		url = f"http://www.academieroyale.be/Academie/documents/FichierPDF{base}{n}.pdf"
 		r = requests.get(url)
@@ -19,13 +20,16 @@ def download(coll,nrange,base):
 			with open(f"data/{coll}/{n}.pdf", "wb") as f:
 				f.write(r.content)
 		else:
-			print(f"{n}: {r.status_code}")
+			#print(f"{n}: {r.status_code}")
+			NotFound.append(n)
 
 	if coll == "nbn": # handle extra file
 		url = "https://www.academieroyale.be/Academie/documents/ALBIMOORWilly18211.pdf"
 		r = requests.get(url)
 		with open(f"data/nbn/2112.pdf", "wb") as f:
 			f.write(r.content)
+	print("404s for",coll)
+	print(NotFound)
 
 if coll == "bn":
 	nrange = range(2037, 2103)
